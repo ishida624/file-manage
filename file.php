@@ -32,7 +32,7 @@ if (isset($_GET['realpath'])) {
   chdir("$filedir");
 }
 else {
-  $filedir = "/var/www/apache";
+  $filedir = "/var/www/apache";                                 #初始頁面在/var/www/apache
   chdir("$filedir");
 }
 
