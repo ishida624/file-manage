@@ -10,6 +10,7 @@
     <input type = "text" name="item" placeholder="資料夾名稱">
     <br>
     <input type="hidden" name="action" value="add">
+    <input type="hidden" name="realpath" value="<?php echo $_GET['realpath'];?>">
     <input type="submit" value="建立" name="add_index">
     <input type="submit" value="刪除" name="delete_index">
     <input type="submit" value="回上層" name="back_index">
@@ -25,12 +26,14 @@
 </html>
 
 <?php
+
 if (isset($_GET['realpath'])) {
   $filedir = $_GET['realpath'];
   chdir("$filedir");
 }
 else {
-  $filedir = realpath(".");
+  $filedir = "/var/www/apache";
+  chdir("$filedir");
 }
 
 $fileresorce = opendir($filedir);
@@ -41,7 +44,10 @@ if (isset($_GET["action"])=="add")
 {
   if(isset($_GET["add_index"])   )
   {
-      mkdir($_GET["item"],0777);
+      $index_name = $_GET['item'];
+      $realpath = $_GET['realpath'];
+      //echo $realpath;
+     header("Location:create-index.php?realpath="."$realpath"."&&index_name="."$index_name");
 }
 if(isset($_GET["delete_index"]))
 {
@@ -50,8 +56,9 @@ if(isset($_GET["delete_index"]))
 
 if(isset($_GET["back_index"]))
 {
-   chdir("./");
-   $fileresorce = opendir(realpath("."));
+   chdir("../");
+   $realpath = realpath(".");
+   header("Location:file.php?realpath=".$realpath);
 }
 
 }
@@ -65,7 +72,7 @@ echo "<table border = '1' width= '400'>";
 while ($filelist = readdir($fileresorce)) {
   if (is_dir($filedir."/".$filelist)) {
   echo "<tr><td>".$filelist."</td>";
-  echo "<td>"."<a href = 'open.file.php?file=".$filelist."'>進入</a>"."</td></tr>";
+  echo "<td>"."<a href = 'open.index.php?index=".realpath(".")."/".$filelist."'>進入</a>"."</td></tr>";
   }
 }
 echo "</table>";
