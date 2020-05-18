@@ -36,7 +36,7 @@ else {
   chdir("$filedir");
 }
 
-$fileresorce = opendir($filedir);
+
 
 
 #按鈕判斷
@@ -46,7 +46,7 @@ if (isset($_GET["action"])=="add")
   {
       $index_name = $_GET['item'];
       $realpath = $_GET['realpath'];
-      //echo $realpath;
+
      header("Location:create-index.php?realpath="."$realpath"."&&index_name="."$index_name");
 }
 if(isset($_GET["delete_index"]))
@@ -66,17 +66,21 @@ if(isset($_GET["back_index"]))
 
 
 echo "現在路徑為 ：".realpath(".")."<br><br>";
+
 #顯示資料夾及檔案
+$filedir = "*";
+$fileresorce = glob($filedir);
 echo "資料夾：<br>";
 echo "<table border = '1' width= '400'>";
-while ($filelist = readdir($fileresorce)) {
-  if (is_dir($filedir."/".$filelist)) {
-  echo "<tr><td>".$filelist."</td>";
-  echo "<td>"."<a href = 'open.index.php?index=".realpath(".")."/".$filelist."'>進入</a>"."</td></tr>";
+
+foreach ($fileresorce as $key => $index) {
+  if (is_dir($index)) {
+  echo "<tr><td>".$index."</td>";
+  echo "<td>"."<a href = 'open.index.php?index=".realpath(".")."/".$index."'>進入</a>"."</td></tr>";
   }
 }
 echo "</table>";
-  rewinddir($fileresorce);
+
 
 echo "<br>檔案：<br>";
 echo "<table border = '1' width= '50%'>";
@@ -84,16 +88,17 @@ echo "<tr><td>檔案名稱</td>";
 echo "<td>檔案大小</td>";
 echo "<td>功能</td><tr>";
 
-while ($filelist = readdir($fileresorce)) {
-  if (is_file($filedir."/".$filelist)) {
-  echo"<tr><td>".$filelist."</td>";
-  echo "<td>".filesize($filelist)." byte</td>";
-  echo "<td>"."<a href = 'delete.file.php?file=".$filedir."/".$filelist."&&realpath=".$filedir."'>刪除</a>"."</td></tr>";
+
+foreach ($fileresorce as $key => $filename) {
+  if (is_file($filename)) {
+  echo"<tr><td>".$filename."</td>";
+  echo "<td>".filesize($filename)." byte</td>";
+  echo "<td>"."<a href = 'delete.file.php?file=".realpath(".")."/".$filename."&&realpath=".realpath(".")."'>刪除</a>"."</td></tr>";
   }
 }
 echo "</table>";
 
-closedir($fileresorce);
+
 
 #上傳檔案
 if(isset ($_FILES["fileupload"]))
