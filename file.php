@@ -86,14 +86,15 @@ echo "<br>檔案：<br>";
 echo "<table border = '1' width= '50%'>";
 echo "<tr><td>檔案名稱</td>";
 echo "<td>檔案大小</td>";
-echo "<td>功能</td><tr>";
-
+echo "<td>功能</td>";
+echo "<td> 功能2</td></tr>";
 
 foreach ($fileresorce as $key => $filename) {
   if (is_file($filename)) {
   echo"<tr><td>".$filename."</td>";
   echo "<td>".filesize($filename)." byte</td>";
-  echo "<td>"."<a href = 'delete.file.php?file=".realpath(".")."/".$filename."&&realpath=".realpath(".")."'>刪除</a>"."</td></tr>";
+  echo "<td>"."<a href = 'delete.file.php?file=".realpath(".")."/".$filename."&&realpath=".realpath(".")."'>刪除</a>"."</td>";
+  echo "<td>"."<a href = 'read-file.php?file=".realpath(".")."/".$filename."&&realpath=".realpath(".")."'>讀取</a>"."</td></tr>";
   }
 }
 echo "</table>";
@@ -101,12 +102,17 @@ echo "</table>";
 
 
 #上傳檔案
-if(isset ($_FILES["fileupload"]))
+if(isset ($_FILES["fileupload"]))                                                                                                                     #判斷是否送出上傳的html表單
 {
-if ($_FILES["fileupload"]["error"]==0  ) {
-  if (move_uploaded_file($_FILES["fileupload"]["tmp_name"],"./".$_FILES["fileupload"]["name"])) {
+if ($_FILES["fileupload"]["error"]==0  ) {                                                                                                  #判斷檔案是否上傳成功
+  if (move_uploaded_file($_FILES["fileupload"]["tmp_name"],"./".$_FILES["fileupload"]["name"])) {         #上傳後從暫存區移動到資料夾內 成功的話回傳True ，if成立
     echo "上傳成功";
-  header("Location:file.php?realpath=".$_GET['realpath']."");
+    if (isset($_GET['realpath'])) {                                                                                                 #判斷GET當下路徑，刷新當下頁面，else刷新主頁面
+      header("Location:file.php?realpath=".$_GET['realpath']."");
+    }
+    else {
+      header("Location:file.php");
+    }
   }
   else {
     echo "上傳失敗";
